@@ -36,6 +36,7 @@ export default async function ArenaPage() {
       .select("id")
       .eq("user_id", user.id)
       .eq("quiz_id", quiz.id)
+      .eq("play_date", today)
       .maybeSingle();
     alreadyPlayed = !!played;
   }

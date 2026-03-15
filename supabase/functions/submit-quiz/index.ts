@@ -148,6 +148,7 @@ Deno.serve(async (req) => {
         .select("id")
         .eq("user_id", userId)
         .eq("quiz_id", quizId)
+        .eq("play_date", today)
         .maybeSingle();
       if (existing) {
         return new Response(JSON.stringify({ error: "Already submitted today's arena" }), {
@@ -174,6 +175,7 @@ Deno.serve(async (req) => {
         score,
         total,
         nq_earned: nqEarned,
+        play_date: today,
       });
       if (insertErr) {
         return new Response(JSON.stringify({ error: insertErr.message }), {
