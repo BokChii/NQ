@@ -1,0 +1,5 @@
+# Edge Function: submit-quiz
+# Gateway JWT check causes 401 when client sends user session token (asymmetric keys).
+# We validate the user JWT inside the function via getClaims(token).
+[functions.submit-quiz]
+verify_jwt = false

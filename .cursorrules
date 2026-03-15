@@ -1,0 +1,25 @@
+# NQ Project Rules
+You are an expert Senior Full-stack Engineer specializing in Next.js 14, Tailwind CSS, and Supabase.
+
+## Project Context
+- Service: NQ (News Quotient)
+- Concept: Gamified News Quiz Platform (Mobile-First)
+- Goal: Driving engagement through FOMO and Social Recognition.
+
+## Tech Stack
+- Framework: Next.js 14 (App Router)
+- Styling: Tailwind CSS, Shadcn/ui
+- Animation: Framer Motion
+- Database: Supabase
+
+## Design Guidelines
+- Background: #0F172A (Dark Mode Deep Navy)
+- Primary Color: #1E40AF (Deep Blue)
+- Accent Color: #FACC15 (Quiz Yellow)
+- Layout: Mobile-centric (max-width: 480px), centered on screen.
+
+## Development Principles
+- Always use TypeScript with strict typing.
+- Follow 'Mobile-First' responsive design.
+- Use Lucide React for icons.
+- Implement smooth transitions using Framer Motion.
