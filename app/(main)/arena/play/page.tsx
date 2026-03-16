@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { QuizQuestion } from "@/lib/supabase/types";
@@ -182,16 +182,36 @@ export default function ArenaPlayPage() {
                 for (let i = answers.length - 1; i >= 0; i--) {
                   if (answers[i].isCorrect) run++; else break;
                 }
-                return run >= 2 ? <p className="text-xs text-green-600/90 mb-2">{run}연속 정답!</p> : null;
+                return run >= 2 ? <p className="text-xs text-green-600/90 mb-3">{run}연속 정답!</p> : null;
               })()}
-              <div className="flex justify-end gap-2">
-              {index < questions.length - 1 ? (
-                <Button onClick={handleNext}>다음</Button>
-              ) : (
-                <Button onClick={handleFinish} disabled={submitting}>
-                  {submitting ? "제출 중..." : "결과 보기"}
-                </Button>
+              {(current.explanation || current.source_url) && (
+                <div className="rounded-lg border border-border bg-muted/40 p-3 mb-4 space-y-3">
+                  {current.explanation && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">해설</p>
+                      <p className="text-sm text-foreground leading-relaxed">{current.explanation}</p>
+                    </div>
+                  )}
+                  {current.source_url && (
+                    <a
+                      href={current.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={buttonVariants({ variant: "outline", size: "sm", className: "w-full sm:w-auto" })}
+                    >
+                      기사 보러가기
+                    </a>
+                  )}
+                </div>
               )}
+              <div className="flex justify-end gap-2">
+                {index < questions.length - 1 ? (
+                  <Button onClick={handleNext}>다음</Button>
+                ) : (
+                  <Button onClick={handleFinish} disabled={submitting}>
+                    {submitting ? "제출 중..." : "결과 보기"}
+                  </Button>
+                )}
               </div>
             </>
           )}
