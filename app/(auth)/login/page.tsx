@@ -20,23 +20,15 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setError("이메일 형식을 확인해 주세요.");
-      return;
-    }
     setLoading(true);
-    const { data: { user }, error: err } = await supabase.auth.signInWithPassword({ email, password });
+    setError(null);
+    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
     if (err) {
-      setLoading(false);
       setError(err.message);
       return;
     }
-    const { data: profile } = user
-      ? await supabase.from("profiles").select("onboarding_done").eq("id", user.id).single()
-      : { data: null };
-    setLoading(false);
-    window.location.href = profile?.onboarding_done ? "/arena" : "/onboarding";
+    window.location.href = "/onboarding";
   }
 
   return (
