@@ -97,8 +97,8 @@ export default function ArenaPlayPage() {
       }),
     });
     const data = await res.json().catch(() => ({}));
-    setSubmitting(false);
     if (!res.ok) {
+      setSubmitting(false);
       toast.error("제출에 실패했습니다.");
       router.push(`/arena/result?score=${score}&total=${total}&error=1`);
       return;
