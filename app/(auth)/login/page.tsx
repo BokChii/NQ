@@ -22,13 +22,25 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
+    const { data: { user }, error: err } = await supabase.auth.signInWithPassword({ email, password });
     if (err) {
+      setLoading(false);
       setError(err.message);
       return;
     }
-    window.location.href = "/onboarding";
+    // 이미 온보딩을 마친 유저는 /arena로, 미완료/최초 가입은 /onboarding으로
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_done")
+        .eq("id", user.id)
+        .maybeSingle();
+      setLoading(false);
+      window.location.href = profile?.onboarding_done ? "/arena" : "/onboarding";
+    } else {
+      setLoading(false);
+      window.location.href = "/onboarding";
+    }
   }
 
   return (
