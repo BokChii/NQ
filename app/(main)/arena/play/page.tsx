@@ -182,7 +182,6 @@ export default function ArenaPlayPage() {
                 for (let i = answers.length - 1; i >= 0; i--) {
                   if (answers[i].isCorrect) run++; else break;
                 }
-                run++;
                 return run >= 2 ? <p className="text-xs text-green-600/90 mb-2">{run}연속 정답!</p> : null;
               })()}
               <div className="flex justify-end gap-2">
