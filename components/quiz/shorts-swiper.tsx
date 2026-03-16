@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { QuestionItem } from "@/app/(main)/shorts/shorts-list";
@@ -40,6 +40,13 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
   const options = (currentQ?.options as string[]) ?? [];
   const explanation = currentQ?.explanation ?? null;
   const sourceUrl = (currentQ as { source_url?: string | null })?.source_url ?? null;
+  const sourceDate = (currentQ as { source_date?: string | null })?.source_date ?? null;
+
+  function formatSourceDate(dateStr: string): string {
+    const [y, m, d] = dateStr.slice(0, 10).split("-");
+    if (!y || !m || !d) return dateStr;
+    return `${y}년 ${Number(m)}월 ${Number(d)}일`;
+  }
 
   useEffect(() => {
     if (currentIndex >= items.length - 2 && hasMore && !loadingMore && onNeedMore && !needMoreFired.current) {
@@ -128,7 +135,7 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
   if (items.length === 0) {
     return (
       <p className="text-muted-foreground text-sm text-center py-8">
-        아직 문항이 없습니다.
+        아직 풀 수 있는 문항이 없어요. 다른 카테고리를 확인해 보세요.
       </p>
     );
   }
@@ -182,18 +189,35 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
               {selected === currentQ.correct_index && consecutiveCorrect.current >= 2 && (
                 <p className="text-xs text-green-600/90">{consecutiveCorrect.current}연속 정답!</p>
               )}
-              {explanation && (
-                <p className="text-sm text-muted-foreground rounded-lg bg-muted/50 p-3">{explanation}</p>
-              )}
-              {sourceUrl && (
-                <a
-                  href={sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary underline block"
-                >
-                  관련 기사 보기
-                </a>
+              {(explanation || sourceUrl || sourceDate) && (
+                <div className="rounded-lg border border-border bg-muted/40 p-3 space-y-3">
+                  {explanation && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">해설</p>
+                      <p className="text-sm text-foreground leading-relaxed">{explanation}</p>
+                    </div>
+                  )}
+                  {(sourceUrl || sourceDate) && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      {sourceDate && (
+                        <span className="text-xs text-muted-foreground">
+                          {formatSourceDate(sourceDate)}
+                          {" · "}
+                        </span>
+                      )}
+                      {sourceUrl && (
+                        <a
+                          href={sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={buttonVariants({ variant: "outline", size: "sm", className: "w-full sm:w-auto" })}
+                        >
+                          기사 보러가기
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
               <div className="flex justify-end">
                 <Button onClick={handleNext}>

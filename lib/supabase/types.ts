@@ -94,6 +94,7 @@ export interface Database {
           correct_index: number;
           explanation: string | null;
           source_url: string | null;
+          source_date: string | null;
           created_at: string;
         };
         Insert: {
@@ -105,6 +106,7 @@ export interface Database {
           correct_index: number;
           explanation?: string | null;
           source_url?: string | null;
+          source_date?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["quiz_questions"]["Insert"]>;

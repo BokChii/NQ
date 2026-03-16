@@ -184,10 +184,10 @@ export function ShortsList({ initialQuizzes, categories }: ShortsListProps) {
       <TabsContent value={category}>
         {quizzesForCurrent.length === 0 ? (
           <p className="text-muted-foreground text-sm text-center py-8">
-            아직 이 카테고리의 퀴즈가 없습니다.
+            아직 이 카테고리의 퀴즈가 없어요. 다른 카테고리를 눌러 보세요.
           </p>
         ) : flatItemsForCurrent.length === 0 && loadingQuestions ? (
-          <p className="text-muted-foreground text-sm text-center py-8">문항 불러오는 중...</p>
+          <p className="text-muted-foreground text-sm text-center py-8">문항을 불러오는 중이에요...</p>
         ) : (
           <ShortsSwiper
             items={flatItemsForCurrent}

@@ -37,7 +37,9 @@ export function RivalryDashboard({
       <TabsContent value="school">
         <div className="space-y-2">
           {schoolRanking.length === 0 ? (
-            <p className="text-muted-foreground text-sm">아직 대학 랭킹이 없습니다.</p>
+            <p className="text-muted-foreground text-sm">
+              아직 대학 랭킹이 없어요. 온보딩에서 대학을 선택한 사용자가 참여하면 여기에 표시됩니다.
+            </p>
           ) : (
             schoolRanking.map((r, i) => (
               <motion.div
@@ -68,7 +70,9 @@ export function RivalryDashboard({
       <TabsContent value="region">
         <div className="space-y-2">
           {regionRanking.length === 0 ? (
-            <p className="text-muted-foreground text-sm">아직 지역 랭킹이 없습니다.</p>
+            <p className="text-muted-foreground text-sm">
+              아직 지역 랭킹이 없어요. 온보딩에서 지역을 선택한 사용자가 참여하면 여기에 표시됩니다.
+            </p>
           ) : (
             regionRanking.map((r, i) => (
               <motion.div

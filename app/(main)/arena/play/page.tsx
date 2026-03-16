@@ -10,6 +10,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { QuizQuestion } from "@/lib/supabase/types";
 
+function formatSourceDate(dateStr: string): string {
+  const [y, m, d] = dateStr.slice(0, 10).split("-");
+  if (!y || !m || !d) return dateStr;
+  return `${y}년 ${Number(m)}월 ${Number(d)}일`;
+}
+
 export default function ArenaPlayPage() {
   const router = useRouter();
   const toast = useToast();
@@ -184,7 +190,7 @@ export default function ArenaPlayPage() {
                 }
                 return run >= 2 ? <p className="text-xs text-green-600/90 mb-3">{run}연속 정답!</p> : null;
               })()}
-              {(current.explanation || current.source_url) && (
+              {(current.explanation || current.source_url || current.source_date) && (
                 <div className="rounded-lg border border-border bg-muted/40 p-3 mb-4 space-y-3">
                   {current.explanation && (
                     <div>
@@ -192,15 +198,25 @@ export default function ArenaPlayPage() {
                       <p className="text-sm text-foreground leading-relaxed">{current.explanation}</p>
                     </div>
                   )}
-                  {current.source_url && (
-                    <a
-                      href={current.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={buttonVariants({ variant: "outline", size: "sm", className: "w-full sm:w-auto" })}
-                    >
-                      기사 보러가기
-                    </a>
+                  {(current.source_url || current.source_date) && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      {current.source_date && (
+                        <span className="text-xs text-muted-foreground">
+                          {formatSourceDate(current.source_date)}
+                          {" · "}
+                        </span>
+                      )}
+                      {current.source_url && (
+                        <a
+                          href={current.source_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={buttonVariants({ variant: "outline", size: "sm", className: "w-full sm:w-auto" })}
+                        >
+                          기사 보러가기
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

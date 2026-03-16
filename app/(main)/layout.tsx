@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getDisplayStreak } from "@/lib/streak";
+import { MainNav } from "@/components/main-nav";
 
 export const dynamic = "force-dynamic";
 
@@ -35,31 +36,9 @@ export default async function MainLayout({
             </div>
           )}
         </div>
-        <nav className="flex border-t border-border">
-          <NavLink href="/arena">아레나</NavLink>
-          <NavLink href="/shorts">쇼츠</NavLink>
-          <NavLink href="/rivalry">대결</NavLink>
-          <NavLink href="/profile">프로필</NavLink>
-        </nav>
+        <MainNav />
       </header>
       <main className="flex-1">{children}</main>
     </div>
-  );
-}
-
-function NavLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex-1 py-3 text-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-    >
-      {children}
-    </Link>
   );
 }

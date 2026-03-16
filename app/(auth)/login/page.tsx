@@ -20,15 +20,23 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
-    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setError("이메일 형식을 확인해 주세요.");
+      return;
+    }
+    setLoading(true);
+    const { data: { user }, error: err } = await supabase.auth.signInWithPassword({ email, password });
     if (err) {
+      setLoading(false);
       setError(err.message);
       return;
     }
-    window.location.href = "/onboarding";
+    const { data: profile } = user
+      ? await supabase.from("profiles").select("onboarding_done").eq("id", user.id).single()
+      : { data: null };
+    setLoading(false);
+    window.location.href = profile?.onboarding_done ? "/arena" : "/onboarding";
   }
 
   return (
@@ -57,6 +65,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+              <p className="text-xs text-muted-foreground">가입 시 사용한 이메일 주소를 입력하세요.</p>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
@@ -68,10 +77,12 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
+                placeholder="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <p className="text-xs text-muted-foreground">가입 시 설정한 비밀번호를 입력하세요.</p>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "로그인 중..." : "로그인"}

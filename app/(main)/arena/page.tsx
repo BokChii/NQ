@@ -51,9 +51,12 @@ export default async function ArenaPage() {
       </div>
       {!quiz ? (
         <Card>
-          <CardContent className="pt-6">
-            <p className="text-muted-foreground text-center text-sm">
-              오늘의 퀴즈가 아직 준비되지 않았습니다.
+          <CardContent className="pt-6 text-center space-y-1">
+            <p className="text-muted-foreground text-sm">
+              오늘의 퀴즈가 아직 준비되지 않았어요.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              매일 새벽에 업데이트됩니다. 잠시 후 다시 확인해 주세요.
             </p>
           </CardContent>
         </Card>

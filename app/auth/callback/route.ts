@@ -10,13 +10,26 @@ export async function GET(request: Request) {
 
   const supabase = await createClient();
 
+  async function getRedirectAfterAuth(defaultNext: string): Promise<string> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return defaultNext;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_done")
+      .eq("id", user.id)
+      .single();
+    if (profile?.onboarding_done) return defaultNext.startsWith("/") ? defaultNext : "/arena";
+    return "/onboarding";
+  }
+
   if (code) {
     // PKCE: 이메일 링크에서 code로 리다이렉트된 경우 (비밀번호 찾기 등)
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
       return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent(error.message)}`, request.url));
     }
-    const nextUrl = next.startsWith("/") ? next : "/reset-password";
+    const baseNext = next.startsWith("/") ? next : "/reset-password";
+    const nextUrl = baseNext === "/reset-password" ? baseNext : await getRedirectAfterAuth(baseNext);
     return NextResponse.redirect(new URL(nextUrl, request.url));
   }
 
@@ -28,7 +41,7 @@ export async function GET(request: Request) {
     if (error) {
       return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent(error.message)}`, request.url));
     }
-    const nextUrl = next.startsWith("/") ? next : "/arena";
+    const nextUrl = await getRedirectAfterAuth(next.startsWith("/") ? next : "/arena");
     return NextResponse.redirect(new URL(nextUrl, request.url));
   }
 
