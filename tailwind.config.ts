@@ -22,6 +22,8 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        success: "hsl(var(--success))",
+        destructive: "hsl(var(--destructive))",
       },
     },
     screens: {

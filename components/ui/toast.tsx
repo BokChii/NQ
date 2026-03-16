@@ -47,9 +47,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 function ToastItem({ message, type }: { message: string; type: ToastType }) {
   const bg =
     type === "success"
-      ? "bg-green-600/95 text-white border-green-500"
+      ? "bg-success/95 text-white border-success"
       : type === "error"
-        ? "bg-red-600/95 text-white border-red-500"
+        ? "bg-destructive/95 text-white border-destructive"
         : "bg-primary/95 text-primary-foreground border-primary";
   return (
     <div

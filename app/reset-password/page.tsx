@@ -97,7 +97,7 @@ export default function ResetPasswordPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+              <p className="text-sm text-destructive text-center">{error}</p>
             )}
             <div className="space-y-2">
               <Label htmlFor="password">새 비밀번호</Label>

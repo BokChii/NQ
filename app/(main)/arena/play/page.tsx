@@ -167,9 +167,9 @@ export default function ArenaPlayPage() {
                     selected === null
                       ? "border-border hover:bg-muted/50"
                       : i === current.correct_index
-                        ? "border-green-500 bg-green-500/10"
+                        ? "border-success bg-success/10"
                         : selected === i
-                          ? "border-red-500 bg-red-500/10"
+                          ? "border-destructive bg-destructive/10"
                           : "border-border opacity-70"
                   }`}
                 >
@@ -180,7 +180,7 @@ export default function ArenaPlayPage() {
           </Card>
           {selected !== null && (
             <>
-              <p className={`text-sm font-medium mb-2 ${selected === current.correct_index ? "text-green-600" : "text-red-600"}`}>
+              <p className={`text-sm font-medium mb-2 ${selected === current.correct_index ? "text-success" : "text-destructive"}`}>
                 {selected === current.correct_index ? "정답!" : "오답"}
               </p>
               {selected === current.correct_index && (() => {
@@ -188,7 +188,7 @@ export default function ArenaPlayPage() {
                 for (let i = answers.length - 1; i >= 0; i--) {
                   if (answers[i].isCorrect) run++; else break;
                 }
-                return run >= 2 ? <p className="text-xs text-green-600/90 mb-3">{run}연속 정답!</p> : null;
+                return run >= 2 ? <p className="text-xs text-success/90 mb-3">{run}연속 정답!</p> : null;
               })()}
               {(current.explanation || current.source_url || current.source_date) && (
                 <div className="rounded-lg border border-border bg-muted/40 p-3 mb-4 space-y-3">

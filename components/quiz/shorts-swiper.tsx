@@ -170,9 +170,9 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
                     selected === null
                       ? "border-border hover:bg-muted/50"
                       : i === currentQ.correct_index
-                        ? "border-green-500 bg-green-500/10"
+                        ? "border-success bg-success/10"
                         : selected === i
-                          ? "border-red-500 bg-red-500/10"
+                          ? "border-destructive bg-destructive/10"
                           : "border-border opacity-70"
                   }`}
                 >
@@ -183,11 +183,11 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
           </Card>
           {showResult && (
             <div className="mt-4 space-y-3">
-              <p className={`text-sm font-medium ${selected === currentQ.correct_index ? "text-green-600" : "text-red-600"}`}>
+              <p className={`text-sm font-medium ${selected === currentQ.correct_index ? "text-success" : "text-destructive"}`}>
                 {selected === currentQ.correct_index ? "정답!" : "오답"}
               </p>
               {selected === currentQ.correct_index && consecutiveCorrect.current >= 2 && (
-                <p className="text-xs text-green-600/90">{consecutiveCorrect.current}연속 정답!</p>
+                <p className="text-xs text-success/90">{consecutiveCorrect.current}연속 정답!</p>
               )}
               {(explanation || sourceUrl || sourceDate) && (
                 <div className="rounded-lg border border-border bg-muted/40 p-3 space-y-3">

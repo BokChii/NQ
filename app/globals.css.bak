@@ -1,0 +1,51 @@
+/* 백업: 라이트 테마 적용 전 (다크). 되돌리려면 이 파일 내용을 app/globals.css 에 덮어쓰세요. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* NQ: Deep Blue point #1E40AF, dark base #0F172A */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
+    --primary: 224 76% 48%;
+    --primary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 224 76% 48%;
+    --accent-foreground: 210 40% 98%;
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 224 76% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Arena calendar: scrollbar matches dark theme */
+.arena-calendar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.4) transparent;
+}
+.arena-calendar-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.arena-calendar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.arena-calendar-scroll::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 3px;
+}
+.arena-calendar-scroll::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
+}

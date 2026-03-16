@@ -52,12 +52,12 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {resetDone && (
-              <p className="text-sm text-green-600 dark:text-green-400 text-center">
+              <p className="text-sm text-success text-center">
                 비밀번호가 변경되었습니다. 새 비밀번호로 로그인하세요.
               </p>
             )}
             {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+              <p className="text-sm text-destructive text-center">{error}</p>
             )}
             <div className="space-y-2">
               <Label htmlFor="email">이메일</Label>

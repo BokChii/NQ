@@ -84,7 +84,7 @@ export default function SignupPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+              <p className="text-sm text-destructive text-center">{error}</p>
             )}
             <div className="space-y-2">
               <Label htmlFor="fullName">이름</Label>

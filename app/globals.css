@@ -4,20 +4,22 @@
 
 @layer base {
   :root {
-    /* NQ: Deep Blue point #1E40AF, dark base #0F172A */
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 13%;
-    --card-foreground: 210 40% 98%;
-    --primary: 224 76% 48%;
-    --primary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 224 76% 48%;
-    --accent-foreground: 210 40% 98%;
-    --border: 217 33% 22%;
-    --input: 217 33% 22%;
-    --ring: 224 76% 48%;
+    /* NQ Light: 명품·지적 톤 — 웜 화이트 배경, 깔끔한 블루 primary, 연한 베이지·그레이 */
+    --background: 40 20% 98%;
+    --foreground: 220 15% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 18%;
+    --primary: 215 55% 42%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 35 15% 93%;
+    --muted-foreground: 220 10% 46%;
+    --accent: 215 45% 94%;
+    --accent-foreground: 215 55% 35%;
+    --border: 35 12% 88%;
+    --input: 35 12% 90%;
+    --ring: 215 55% 42%;
+    --success: 142 45% 38%;
+    --destructive: 0 55% 45%;
   }
 }
 
@@ -30,10 +32,10 @@
   }
 }
 
-/* Arena calendar: scrollbar matches dark theme */
+/* Arena calendar: scrollbar — 라이트 테마 */
 .arena-calendar-scroll {
   scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted-foreground) / 0.4) transparent;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
 }
 .arena-calendar-scroll::-webkit-scrollbar {
   height: 6px;
@@ -42,9 +44,9 @@
   background: transparent;
 }
 .arena-calendar-scroll::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.4);
+  background: hsl(var(--muted-foreground) / 0.35);
   border-radius: 3px;
 }
 .arena-calendar-scroll::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.6);
+  background: hsl(var(--muted-foreground) / 0.5);
 }
