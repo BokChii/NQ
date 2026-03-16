@@ -29,3 +29,22 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* Arena calendar: scrollbar matches dark theme */
+.arena-calendar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.4) transparent;
+}
+.arena-calendar-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.arena-calendar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.arena-calendar-scroll::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 3px;
+}
+.arena-calendar-scroll::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
+}

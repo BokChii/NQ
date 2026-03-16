@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDisplayStreak } from "@/lib/streak";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export default async function MainLayout({
     data: { user },
   } = await supabase.auth.getUser();
   const profile = user
-    ? await supabase.from("profiles").select("nq, level, streak, rank_name").eq("id", user.id).single()
+    ? await supabase.from("profiles").select("nq, level, streak, rank_name, last_played_at").eq("id", user.id).single()
     : { data: null };
 
   return (
@@ -30,7 +31,7 @@ export default async function MainLayout({
               )}
               <span>nq {Number(profile.data.nq).toFixed(1)}</span>
               <span>Lv.{profile.data.level}</span>
-              <span>🔥 {profile.data.streak}</span>
+              <span>🔥 {getDisplayStreak(Number(profile.data.streak), profile.data.last_played_at as string | null)}</span>
             </div>
           )}
         </div>

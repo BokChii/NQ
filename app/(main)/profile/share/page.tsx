@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ShareCard } from "@/components/share/share-card";
+import { getDisplayStreak } from "@/lib/streak";
 
 export default async function ProfileSharePage() {
   const supabase = await createClient();
@@ -10,10 +11,15 @@ export default async function ProfileSharePage() {
   if (!user) redirect("/login");
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name, nq, level, streak")
+    .select("display_name, nq, level, streak, last_played_at")
     .eq("id", user.id)
     .single();
   if (!profile) redirect("/profile");
+
+  const displayStreak = getDisplayStreak(
+    Number((profile as { streak?: number }).streak) ?? 0,
+    (profile as { last_played_at?: string | null }).last_played_at ?? null
+  );
 
   return (
     <div className="p-4 flex flex-col items-center min-h-screen">
@@ -25,7 +31,7 @@ export default async function ProfileSharePage() {
         displayName={(profile as { display_name?: string }).display_name ?? "익명"}
         nq={Number((profile as { nq?: number }).nq).toFixed(1)}
         level={Number((profile as { level?: number }).level)}
-        streak={Number((profile as { streak?: number }).streak)}
+        streak={displayStreak}
       />
     </div>
   );

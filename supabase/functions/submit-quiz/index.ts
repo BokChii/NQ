@@ -124,7 +124,8 @@ Deno.serve(async (req) => {
     const prevXp = Number(profile?.xp) ?? 0;
     const prevLevel = Number(profile?.level) ?? 1;
     const prevRankName = (profile?.rank_name as string) ?? "옵저버";
-    const lastPlayed = (profile?.last_played_at as string) ?? null;
+    const lastPlayedRaw = (profile?.last_played_at as string) ?? null;
+    const lastPlayedDate = lastPlayedRaw ? String(lastPlayedRaw).slice(0, 10) : null;
 
     let xpGained = 0;
     let newStreak = 1;
@@ -157,9 +158,9 @@ Deno.serve(async (req) => {
         });
       }
       const prevStreak = Number(profile?.streak) ?? 0;
-      if (lastPlayed === yesterday) {
+      if (lastPlayedDate === yesterday) {
         newStreak = prevStreak + 1;
-      } else if (lastPlayed !== today) {
+      } else if (lastPlayedDate !== today) {
         newStreak = 1;
       }
       const baseXp = DAILY_ARENA_BASE_XP + DAILY_ARENA_XP_PER_CORRECT * score;
