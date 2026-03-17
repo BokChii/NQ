@@ -111,6 +111,11 @@ export default async function ProfilePage() {
             프로필 편집
           </Button>
         </Link>
+        <Link href="/profile/saved">
+          <Button variant="outline" className="w-full">
+            저장한 뉴스 퀴즈
+          </Button>
+        </Link>
         <Link href="/profile/share">
           <Button variant="outline" className="w-full">
             nq 인증 카드 공유

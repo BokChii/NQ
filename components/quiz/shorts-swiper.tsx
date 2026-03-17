@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -26,6 +27,7 @@ type RankUpPayload = { rankName: string };
 
 export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true, loadingMore = false }: ShortsSwiperProps) {
   const needMoreFired = useRef(false);
+  const toast = useToast();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -33,8 +35,18 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
   const [rankupModalOpen, setRankupModalOpen] = useState(false);
   const [levelupPayload, setLevelupPayload] = useState<LevelUpPayload | null>(null);
   const [rankupPayload, setRankupPayload] = useState<RankUpPayload | null>(null);
+  const [savedQuestionIds, setSavedQuestionIds] = useState<Set<string>>(() => new Set());
   const consecutiveCorrect = useRef(0);
   const supabase = createClient();
+
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase.from("user_saved_shorts").select("question_id").eq("user_id", user.id);
+      setSavedQuestionIds(new Set((data ?? []).map((r) => r.question_id)));
+    })();
+  }, [supabase]);
 
   const currentQ = items[currentIndex];
   const options = (currentQ?.options as string[]) ?? [];
@@ -132,6 +144,39 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
     }
   }, [currentIndex, items.length]);
 
+  const toggleSave = useCallback(
+    async (questionId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("로그인 후 저장할 수 있어요.");
+        return;
+      }
+      const isSaved = savedQuestionIds.has(questionId);
+      if (isSaved) {
+        const { error } = await supabase.from("user_saved_shorts").delete().eq("user_id", user.id).eq("question_id", questionId);
+        if (error) {
+          toast.error("저장 해제에 실패했어요.");
+          return;
+        }
+        setSavedQuestionIds((prev) => {
+          const next = new Set(prev);
+          next.delete(questionId);
+          return next;
+        });
+        toast.success("저장 목록에서 제거했어요.");
+      } else {
+        const { error } = await supabase.from("user_saved_shorts").insert({ user_id: user.id, question_id: questionId });
+        if (error) {
+          toast.error("저장에 실패했어요.");
+          return;
+        }
+        setSavedQuestionIds((prev) => new Set(prev).add(questionId));
+        toast.success("저장했어요.");
+      }
+    },
+    [savedQuestionIds, supabase, toast]
+  );
+
   if (items.length === 0) {
     return (
       <p className="text-muted-foreground text-sm text-center py-8">
@@ -154,10 +199,23 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
         >
           <Card className="overflow-hidden">
             <CardHeader className="pb-2">
-              <p className="text-sm text-muted-foreground">
-                {categoryLabel}
-              </p>
-              <p className="text-base font-medium leading-relaxed">{currentQ.question}</p>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-muted-foreground">
+                    {categoryLabel}
+                  </p>
+                  <p className="text-base font-medium leading-relaxed">{currentQ.question}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0 h-8 px-2 text-muted-foreground"
+                  onClick={() => toggleSave(currentQ.id)}
+                  title={savedQuestionIds.has(currentQ.id) ? "저장 해제" : "저장"}
+                >
+                  {savedQuestionIds.has(currentQ.id) ? "★" : "☆"}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="space-y-2">
               {options.map((opt, i) => (
@@ -219,10 +277,33 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
                   )}
                 </div>
               )}
-              <div className="flex justify-end">
-                <Button onClick={handleNext}>
-                  다음
-                </Button>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => toggleSave(currentQ.id)}
+                  >
+                    {savedQuestionIds.has(currentQ.id) ? "저장됨" : "저장"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={async () => {
+                      const url = `${typeof window !== "undefined" ? window.location.origin : ""}/shorts/share/${currentQ.id}`;
+                      try {
+                        await navigator.clipboard.writeText(url);
+                        if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(5);
+                        toast.success("링크가 복사되었어요.");
+                      } catch {
+                        toast.error("복사에 실패했어요.");
+                      }
+                    }}
+                  >
+                    링크 복사
+                  </Button>
+                </div>
+                <Button onClick={handleNext}>다음</Button>
               </div>
             </div>
           )}

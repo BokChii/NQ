@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ShortsSwiper } from "@/components/quiz/shorts-swiper";
 import { createClient } from "@/lib/supabase/client";
-import type { Quiz } from "@/lib/supabase/types";
 import type { QuizQuestion } from "@/lib/supabase/types";
 
 const CATEGORIES = [
@@ -16,7 +15,6 @@ const CATEGORIES = [
 ];
 
 const PAGE_SIZE = 10;
-type QuizMeta = Pick<Quiz, "id" | "title" | "category" | "difficulty"> & { created_at?: string };
 
 export type QuestionItem = QuizQuestion & { quiz_title?: string };
 
@@ -30,136 +28,83 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 type ShortsListProps = {
-  initialQuizzes: QuizMeta[];
+  initialQuestionsByCategory: Record<string, QuestionItem[]>;
   categories: { id: string; label: string }[];
+  excludedQuestionIds?: string[];
 };
 
-export function ShortsList({ initialQuizzes, categories }: ShortsListProps) {
+export function ShortsList({ initialQuestionsByCategory, categories, excludedQuestionIds = [] }: ShortsListProps) {
   const defaultCategory = categories[0]?.id ?? "economy";
   const [category, setCategory] = useState(defaultCategory);
   const [shuffleEnabled, setShuffleEnabled] = useState(false);
 
-  const [quizzesByCategory, setQuizzesByCategory] = useState<Record<string, QuizMeta[]>>(() => {
-    const byCat: Record<string, QuizMeta[]> = {};
-    for (const c of categories) byCat[c.id] = [];
-    for (const q of initialQuizzes) {
-      const cat = q.category;
-      if (byCat[cat]) byCat[cat].push(q);
-    }
-    return byCat;
-  });
-
+  const [itemsByCategory, setItemsByCategory] = useState<Record<string, QuestionItem[]>>(
+    () => ({ ...initialQuestionsByCategory })
+  );
   const [hasMoreByCategory, setHasMoreByCategory] = useState<Record<string, boolean>>(() => {
     const r: Record<string, boolean> = {};
     for (const c of categories) r[c.id] = true;
     return r;
   });
-
   const [loadingMore, setLoadingMore] = useState(false);
   const [shuffledByCategory, setShuffledByCategory] = useState<Record<string, boolean>>({});
-
-  const [flatItemsByCategory, setFlatItemsByCategory] = useState<Record<string, QuestionItem[]>>({});
-  const [expandedCountByCategory, setExpandedCountByCategory] = useState<Record<string, number>>({});
-  const [loadingQuestions, setLoadingQuestions] = useState(false);
 
   const supabase = createClient();
 
   useEffect(() => {
     if (!shuffleEnabled || shuffledByCategory[category]) return;
-    const list = quizzesByCategory[category] ?? [];
+    const list = itemsByCategory[category] ?? [];
     if (list.length === 0) return;
-    setQuizzesByCategory((prev) => ({ ...prev, [category]: shuffle(list) }));
+    setItemsByCategory((prev) => ({ ...prev, [category]: shuffle(list) }));
     setShuffledByCategory((prev) => ({ ...prev, [category]: true }));
-    setFlatItemsByCategory((prev) => ({ ...prev, [category]: [] }));
-    setExpandedCountByCategory((prev) => ({ ...prev, [category]: 0 }));
-  }, [shuffleEnabled, category, shuffledByCategory, quizzesByCategory]);
+  }, [shuffleEnabled, category, shuffledByCategory, itemsByCategory]);
 
-  const quizzesForCurrent = quizzesByCategory[category] ?? [];
-  const flatItemsForCurrent = flatItemsByCategory[category] ?? [];
-  const expandedCount = expandedCountByCategory[category] ?? 0;
+  const itemsForCurrent = itemsByCategory[category] ?? [];
 
-  const expandNextQuizzes = useCallback(
-    async (cat: string) => {
-      const quizzes = quizzesByCategory[cat] ?? [];
-      const expanded = expandedCountByCategory[cat] ?? 0;
-      const nextStart = expanded;
-      const nextEnd = Math.min(nextStart + PAGE_SIZE, quizzes.length);
-      if (nextStart >= nextEnd) return;
-      const quizSlice = quizzes.slice(nextStart, nextEnd);
-      const quizIds = quizSlice.map((q) => q.id);
-      const quizTitleById = Object.fromEntries(quizSlice.map((q) => [q.id, q.title]));
-      setLoadingQuestions(true);
-      const { data: questions } = await supabase
-        .from("quiz_questions")
-        .select("*")
-        .in("quiz_id", quizIds)
-        .order("sort_order");
-      setLoadingQuestions(false);
-      const list = (questions ?? []) as QuizQuestion[];
-      const ordered = list.slice().sort((a, b) => {
-        const ai = quizIds.indexOf(a.quiz_id);
-        const bi = quizIds.indexOf(b.quiz_id);
-        return ai !== bi ? ai - bi : a.sort_order - b.sort_order;
-      });
-      const items: QuestionItem[] = ordered.map((q) => ({
-        ...q,
-        quiz_title: quizTitleById[q.quiz_id],
-      }));
-      setFlatItemsByCategory((prev) => ({
-        ...prev,
-        [cat]: [...(prev[cat] ?? []), ...items],
-      }));
-      setExpandedCountByCategory((prev) => ({ ...prev, [cat]: nextEnd }));
-    },
-    [quizzesByCategory, expandedCountByCategory, supabase]
-  );
-
-  useEffect(() => {
-    if (loadingQuestions || loadingMore) return;
-    const cat = category;
-    const quizzes = quizzesByCategory[cat] ?? [];
-    const flat = flatItemsByCategory[cat] ?? [];
-    const expanded = expandedCountByCategory[cat] ?? 0;
-    if (quizzes.length === 0) return;
-    if (flat.length === 0 && expanded === 0) {
-      expandNextQuizzes(cat);
-    }
-  }, [category, quizzesByCategory, flatItemsByCategory, expandedCountByCategory, loadingQuestions, loadingMore, expandNextQuizzes]);
-
-  const loadMoreQuizzes = useCallback(
+  const loadMoreQuestions = useCallback(
     async (cat: string) => {
       if (loadingMore) return;
-      const current = quizzesByCategory[cat] ?? [];
+      const current = itemsByCategory[cat] ?? [];
+      const offset = current.length;
       setLoadingMore(true);
-      const { data } = await supabase
-        .from("quizzes")
-        .select("id, title, category, difficulty, created_at")
-        .eq("daily_arena", false)
-        .eq("category", cat)
+      let query = supabase
+        .from("quiz_questions")
+        .select(
+          `
+          *,
+          quizzes!inner(id, title, category, difficulty)
+        `
+        )
+        .eq("quizzes.daily_arena", false)
+        .eq("quizzes.category", cat)
         .order("created_at", { ascending: false })
-        .range(current.length, current.length + PAGE_SIZE - 1);
+        .range(offset, offset + PAGE_SIZE - 1);
+      if (excludedQuestionIds.length > 0) {
+        query = query.not("id", "in", `(${excludedQuestionIds.join(",")})`);
+      }
+      const { data: rows } = await query;
       setLoadingMore(false);
-      const next = (data ?? []) as QuizMeta[];
+      const next: QuestionItem[] = (rows ?? []).map((row: Record<string, unknown>) => {
+        const quiz = row.quizzes as { id: string; title: string; category: string; difficulty: number } | null;
+        const { quizzes: _quizzes, ...qq } = row;
+        return { ...qq, quiz_title: quiz?.title } as QuestionItem;
+      });
       setHasMoreByCategory((prev) => ({ ...prev, [cat]: next.length >= PAGE_SIZE }));
-      setQuizzesByCategory((prev) => ({
+      setItemsByCategory((prev) => ({
         ...prev,
         [cat]: [...(prev[cat] ?? []), ...next],
       }));
     },
-    [loadingMore, quizzesByCategory, supabase]
+    [loadingMore, itemsByCategory, supabase, excludedQuestionIds]
   );
 
   const handleNeedMore = useCallback(() => {
-    const quizzes = quizzesByCategory[category] ?? [];
-    const expanded = expandedCountByCategory[category] ?? 0;
-    if (expanded < quizzes.length) {
-      expandNextQuizzes(category);
-    } else if (hasMoreByCategory[category]) {
-      loadMoreQuizzes(category);
+    if (hasMoreByCategory[category]) {
+      loadMoreQuestions(category);
     }
-  }, [category, quizzesByCategory, expandedCountByCategory, hasMoreByCategory, expandNextQuizzes, loadMoreQuizzes]);
+  }, [category, hasMoreByCategory, loadMoreQuestions]);
 
-  const hasMore = expandedCount < quizzesForCurrent.length || hasMoreByCategory[category];
+  const hasMore = hasMoreByCategory[category];
 
   return (
     <Tabs value={category} onValueChange={setCategory}>
@@ -182,19 +127,17 @@ export function ShortsList({ initialQuizzes, categories }: ShortsListProps) {
         </label>
       </div>
       <TabsContent value={category}>
-        {quizzesForCurrent.length === 0 ? (
+        {itemsForCurrent.length === 0 ? (
           <p className="text-muted-foreground text-sm text-center py-8">
             아직 이 카테고리의 퀴즈가 없어요. 다른 카테고리를 눌러 보세요.
           </p>
-        ) : flatItemsForCurrent.length === 0 && loadingQuestions ? (
-          <p className="text-muted-foreground text-sm text-center py-8">문항을 불러오는 중이에요...</p>
         ) : (
           <ShortsSwiper
-            items={flatItemsForCurrent}
+            items={itemsForCurrent}
             categoryLabel={CATEGORIES.find((c) => c.id === category)?.label ?? category}
             onNeedMore={handleNeedMore}
             hasMore={hasMore}
-            loadingMore={loadingQuestions || loadingMore}
+            loadingMore={loadingMore}
           />
         )}
       </TabsContent>

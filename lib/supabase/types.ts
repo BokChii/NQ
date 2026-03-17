@@ -155,6 +155,21 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["user_daily_arena"]["Insert"]>;
       };
+      user_saved_shorts: {
+        Row: {
+          id: string;
+          user_id: string;
+          question_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          question_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_saved_shorts"]["Insert"]>;
+      };
     };
   };
 }
@@ -166,3 +181,4 @@ export type Quiz = Database["public"]["Tables"]["quizzes"]["Row"];
 export type QuizQuestion = Database["public"]["Tables"]["quiz_questions"]["Row"];
 export type UserAnswer = Database["public"]["Tables"]["user_answers"]["Row"];
 export type UserDailyArena = Database["public"]["Tables"]["user_daily_arena"]["Row"];
+export type UserSavedShort = Database["public"]["Tables"]["user_saved_shorts"]["Row"];
