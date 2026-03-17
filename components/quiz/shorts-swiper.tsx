@@ -36,6 +36,7 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
   const [levelupPayload, setLevelupPayload] = useState<LevelUpPayload | null>(null);
   const [rankupPayload, setRankupPayload] = useState<RankUpPayload | null>(null);
   const [savedQuestionIds, setSavedQuestionIds] = useState<Set<string>>(() => new Set());
+  const [showEndOfCategory, setShowEndOfCategory] = useState(false);
   const consecutiveCorrect = useRef(0);
   const supabase = createClient();
 
@@ -141,8 +142,10 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
       setCurrentIndex((i) => i + 1);
       setSelected(null);
       setShowResult(false);
+    } else if (currentIndex === items.length - 1 && !hasMore) {
+      setShowEndOfCategory(true);
     }
-  }, [currentIndex, items.length]);
+  }, [currentIndex, items.length, hasMore]);
 
   const toggleSave = useCallback(
     async (questionId: string) => {
@@ -181,6 +184,14 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
     return (
       <p className="text-muted-foreground text-sm text-center py-8">
         아직 풀 수 있는 문항이 없어요. 다른 카테고리를 확인해 보세요.
+      </p>
+    );
+  }
+
+  if (showEndOfCategory) {
+    return (
+      <p className="text-muted-foreground text-sm text-center py-8">
+        아직 이 카테고리의 새로운 퀴즈가 없어요. 다른 카테고리를 눌러 보세요.
       </p>
     );
   }

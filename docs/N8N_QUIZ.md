@@ -30,6 +30,8 @@ n8n 워크플로로 Daily Arena 퀴즈와 카테고리(쇼츠) 퀴즈를 자동 
 | correct_index | int | 0~3 (정답 인덱스) |
 | explanation | text | 해석 (선택) |
 | source_url | text | 관련 뉴스 URL (선택) |
+| source_date | date | 뉴스 일자 (선택) |
+| category | text | **쇼츠용** `economy` \| `it` \| `sports` \| 기타. 지정 시 문항 단위 카테고리 관리 |
 | created_at | timestamptz | 자동 |
 
 RLS가 켜져 있으므로 **INSERT는 service_role 키**로 해야 합니다. anon 키로는 퀴즈/문제 삽입이 불가합니다.
@@ -95,12 +97,13 @@ Headers: `apikey: <SUPABASE_SERVICE_ROLE_KEY>`, `Authorization: Bearer <SUPABASE
 
 ### 3.2 해당 퀴즈에 문제 4개 INSERT
 
-`quiz_id`는 위에서 반환된 id. `sort_order` 1~4, `options`는 4개 문자열 배열, `correct_index` 0~3.
+`quiz_id`는 위에서 반환된 id. `sort_order` 1~4, `options`는 4개 문자열 배열, `correct_index` 0~3. **`category`는 쇼츠 문항 단위 관리용으로 반드시 지정** (예: `economy`, `it`, `sports`, `politics`, `culture`).
 
 ```json
 {
   "quiz_id": "<quiz id>",
   "sort_order": 1,
+  "category": "economy",
   "question": "다음 중 맞는 것은?",
   "options": ["금리 인상은 물가에 영향 없다", "주식은 단기 변동이 크다", "예금 보험은 없다", "환율은 수출에 무관하다"],
   "correct_index": 1,
@@ -151,4 +154,4 @@ Headers: `apikey: <SUPABASE_SERVICE_ROLE_KEY>`, `Authorization: Bearer <SUPABASE
 
 - 시드 예시: `supabase/migrations/20240313000010_seed_shorts_economy.sql`
 - 앱에서 Daily Arena는 `daily_arena = true`이고 `quiz_date = 오늘`인 퀴즈 1개를 사용.
-- 쇼츠는 `daily_arena = false`이고 `category`별로 퀴즈 목록을 불러옵니다.
+- 쇼츠는 `daily_arena = false`이고 `quiz_questions.category`(또는 `quizzes.category`)별로 문항 목록을 불러옵니다. 문항 INSERT 시 `category`를 지정하면 관리가 용이합니다.

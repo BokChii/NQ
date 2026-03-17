@@ -95,6 +95,7 @@ export interface Database {
           explanation: string | null;
           source_url: string | null;
           source_date: string | null;
+          category: string | null;
           created_at: string;
         };
         Insert: {
@@ -107,6 +108,7 @@ export interface Database {
           explanation?: string | null;
           source_url?: string | null;
           source_date?: string | null;
+          category?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["quiz_questions"]["Insert"]>;

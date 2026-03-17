@@ -53,10 +53,11 @@ export default async function ProfileSavedPage() {
     .map((row) => {
       const quiz = row.quizzes as { title?: string; category?: string } | null;
       const { quizzes: _q, ...qq } = row as typeof row & { quizzes: unknown };
+      const cat = (row as { category?: string | null }).category ?? quiz?.category;
       return {
         ...qq,
         quiz_title: quiz?.title,
-        category: quiz?.category,
+        category: cat,
         _order: orderMap[qq.id] ?? 999,
       };
     })

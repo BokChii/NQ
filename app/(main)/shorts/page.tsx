@@ -47,9 +47,10 @@ export default async function ShortsPage() {
   for (const c of CATEGORIES) byCategory[c.id] = [];
   for (const row of rows ?? []) {
     const quiz = row.quizzes as { id: string; title: string; category: string; difficulty: number } | null;
-    if (!quiz || !byCategory[quiz.category]) continue;
+    const cat = (row as { category?: string | null }).category ?? quiz?.category;
+    if (!cat || !byCategory[cat]) continue;
     const { quizzes: _quizzes, ...qq } = row as typeof row & { quizzes: unknown };
-    byCategory[quiz.category].push({ ...qq, quiz_title: quiz.title });
+    byCategory[cat].push({ ...qq, quiz_title: quiz?.title });
   }
 
   return (

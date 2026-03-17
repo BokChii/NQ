@@ -76,7 +76,7 @@ export function ShortsList({ initialQuestionsByCategory, categories, excludedQue
         `
         )
         .eq("quizzes.daily_arena", false)
-        .eq("quizzes.category", cat)
+        .or(`category.eq.${cat},quizzes.category.eq.${cat}`)
         .order("created_at", { ascending: false })
         .range(offset, offset + PAGE_SIZE - 1);
       if (excludedQuestionIds.length > 0) {
