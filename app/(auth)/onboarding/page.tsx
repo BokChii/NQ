@@ -69,18 +69,18 @@ export default function OnboardingPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center p-6">
+      <main className="flex min-h-screen items-center justify-center bg-app p-6">
         <div className="animate-pulse text-muted-foreground">로딩 중...</div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6">
-      <Card className="w-full max-w-[360px]">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-app p-6">
+      <Card variant="elevated" className="w-full max-w-[360px]">
         <CardHeader>
-          <CardTitle className="text-center">프로필 설정</CardTitle>
-          <p className="text-sm text-muted-foreground text-center">
+          <CardTitle className="text-center font-display text-xl">프로필 설정</CardTitle>
+          <p className="text-center text-sm text-muted-foreground">
             학교와 지역을 선택하면 랭킹에 반영됩니다.
           </p>
         </CardHeader>
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
             <div className="space-y-2">
               <Label>학교</Label>
               <select
-                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                className="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 value={schoolId}
                 onChange={(e) => setSchoolId(e.target.value)}
               >
@@ -104,7 +104,7 @@ export default function OnboardingPage() {
             <div className="space-y-2">
               <Label>지역</Label>
               <select
-                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                className="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 value={regionId}
                 onChange={(e) => setRegionId(e.target.value)}
               >
@@ -116,7 +116,7 @@ export default function OnboardingPage() {
                 ))}
               </select>
             </div>
-            <Button type="submit" className="w-full" disabled={saving}>
+            <Button type="submit" variant="cta" className="w-full" disabled={saving}>
               {saving ? "저장 중..." : "시작하기"}
             </Button>
           </form>

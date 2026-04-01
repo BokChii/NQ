@@ -48,39 +48,37 @@ export default async function ProfilePage() {
   const progressPct = progressDenom > 0 ? Math.min(1, (xp - currentLevelStartXp) / progressDenom) : 1;
 
   return (
-    <div className="p-4 space-y-6">
-      <h1 className="text-xl font-bold">프로필</h1>
-      <Card>
+    <div className="space-y-8">
+      <h1 className="font-display text-2xl font-bold tracking-tight">프로필</h1>
+      <Card variant="elevated">
         <CardHeader>
-          <p className="font-medium">{profile?.display_name || user.email}</p>
+          <p className="text-base font-semibold">{profile?.display_name || user.email}</p>
           <p className="text-sm text-muted-foreground">{user.email}</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">nq 지수</span>
-            <span className="font-semibold text-primary">
-              {Number(profile?.nq ?? 0).toFixed(1)}
-            </span>
+            <span className="font-semibold tabular-nums text-primary">{Number(profile?.nq ?? 0).toFixed(1)}</span>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">레벨</span>
-              <span>Lv.{level} → Lv.{level + 1}</span>
+              <span className="font-medium">Lv.{level} → Lv.{level + 1}</span>
             </div>
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>경험치 {xp.toLocaleString()} XP</span>
               <span>다음 레벨까지 {xpToNextLevel.toLocaleString()} XP</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full bg-primary transition-all rounded-full"
+                className="h-full rounded-full bg-gradient-to-r from-primary to-accent-v transition-all duration-300"
                 style={{ width: `${progressPct * 100}%` }}
               />
             </div>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">연속 참여</span>
-            <span>🔥 {getDisplayStreak(Number(profile?.streak ?? 0), profile?.last_played_at ?? null)}</span>
+            <span className="font-medium tabular-nums">🔥 {getDisplayStreak(Number(profile?.streak ?? 0), profile?.last_played_at ?? null)}</span>
           </div>
           {schoolName && (
             <div className="flex justify-between text-sm">
@@ -96,7 +94,7 @@ export default async function ProfilePage() {
           )}
         </CardContent>
       </Card>
-      <Card>
+      <Card variant="elevated">
         <CardHeader>
           <p className="font-medium">일일 아레나 참여</p>
           <p className="text-xs text-muted-foreground">날짜에 마우스를 올리면 점수를 볼 수 있어요</p>
@@ -105,9 +103,9 @@ export default async function ProfilePage() {
           <ArenaCalendar participations={participationMap} />
         </CardContent>
       </Card>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         <Link href="/profile/edit">
-          <Button variant="outline" className="w-full">
+          <Button variant="outlinePrimary" className="w-full">
             프로필 편집
           </Button>
         </Link>

@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { RivalryDashboard } from "@/components/rivalry/rivalry-dashboard";
 
 export default async function RivalryPage() {
@@ -24,11 +23,13 @@ export default async function RivalryPage() {
   }[];
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Rivalry Dashboard</h1>
-      <p className="text-sm text-muted-foreground mb-4">
-        대학교·지역별 평균 nq 실시간 랭킹
-      </p>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="font-display text-2xl font-bold tracking-tight">대결 보드</h1>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          대학교·지역별 평균 nq 실시간 랭킹
+        </p>
+      </div>
       <RivalryDashboard
         schoolRanking={schoolRanking}
         regionRanking={regionRanking}

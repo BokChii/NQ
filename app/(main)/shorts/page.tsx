@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { ShortsList } from "./shorts-list";
 import type { QuestionItem } from "./shorts-list";
+import { Layers } from "lucide-react";
 
 const CATEGORIES = [
   { id: "economy", label: "경제" },
@@ -54,11 +55,17 @@ export default async function ShortsPage() {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Category Shorts</h1>
-      <p className="text-sm text-muted-foreground mb-4">
-        관심사별 무제한 스와이프 퀴즈. XP와 레벨에 반영됩니다.
-      </p>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <div className="inline-flex items-center gap-2 rounded-full bg-accent-v/15 px-3 py-1 text-xs font-semibold text-accent-v">
+          <Layers className="h-3.5 w-3.5" strokeWidth={2.5} />
+          Category Shorts
+        </div>
+        <h1 className="font-display text-2xl font-bold tracking-tight">쇼츠 퀴즈</h1>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          관심사별로 스와이프하며 풀어요. XP와 레벨에 반영됩니다.
+        </p>
+      </div>
       <ShortsList
         initialQuestionsByCategory={byCategory}
         categories={CATEGORIES}

@@ -1,25 +1,30 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* NQ Light: 명품·지적 톤 — 웜 화이트 배경, 깔끔한 블루 primary, 연한 베이지·그레이 */
-    --background: 40 20% 98%;
-    --foreground: 220 15% 18%;
+    /* NQ: 웜 틴트 배경, 딥 블루 primary, 바이올렛 액센트 */
+    --background: 42 28% 97%;
+    --foreground: 222 22% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 18%;
-    --primary: 215 55% 42%;
+    --card-foreground: 222 22% 14%;
+    --primary: 221 62% 44%;
     --primary-foreground: 0 0% 100%;
-    --muted: 35 15% 93%;
-    --muted-foreground: 220 10% 46%;
-    --accent: 215 45% 94%;
-    --accent-foreground: 215 55% 35%;
-    --border: 35 12% 88%;
-    --input: 35 12% 90%;
-    --ring: 215 55% 42%;
-    --success: 142 45% 38%;
-    --destructive: 0 55% 45%;
+    --muted: 38 18% 92%;
+    --muted-foreground: 220 12% 42%;
+    --accent: 215 48% 93%;
+    --accent-foreground: 221 55% 32%;
+    --accent-v: 262 58% 52%;
+    --accent-v-foreground: 0 0% 100%;
+    --border: 38 14% 86%;
+    --input: 38 14% 88%;
+    --ring: 221 62% 44%;
+    --success: 152 48% 36%;
+    --success-foreground: 0 0% 100%;
+    --destructive: 0 58% 46%;
   }
 }
 
@@ -29,6 +34,17 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .bg-app {
+    background: linear-gradient(
+      165deg,
+      hsl(var(--background)) 0%,
+      hsl(38 22% 95%) 45%,
+      hsl(215 35% 96%) 100%
+    );
   }
 }
 

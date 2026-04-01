@@ -52,12 +52,12 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6">
-        <Card className="w-full max-w-[360px]">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-app p-6">
+        <Card variant="elevated" className="w-full max-w-[360px]">
           <CardHeader>
-            <CardTitle className="text-center">이메일을 확인해 주세요</CardTitle>
+            <CardTitle className="text-center font-display text-xl">이메일을 확인해 주세요</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-sm text-muted-foreground text-center">
+          <CardContent className="space-y-4 text-center text-sm text-muted-foreground">
             <p>
               <span className="font-medium text-foreground">{email}</span> 주소로
               인증 메일을 보냈어요.
@@ -66,7 +66,7 @@ export default function SignupPage() {
             <p className="text-xs">
               메일이 보이지 않으면 스팸함도 한 번 확인해 주세요.
             </p>
-            <Button className="w-full" onClick={() => window.location.reload()}>
+            <Button variant="cta" className="w-full" onClick={() => window.location.reload()}>
               다른 이메일로 다시 시도하기
             </Button>
           </CardContent>
@@ -76,10 +76,11 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6">
-      <Card className="w-full max-w-[360px]">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-app p-6">
+      <Card variant="elevated" className="w-full max-w-[360px]">
         <CardHeader>
-          <CardTitle className="text-center">회원가입</CardTitle>
+          <CardTitle className="text-center font-display text-xl">회원가입</CardTitle>
+          <p className="text-center text-sm text-muted-foreground">NQ와 함께 뉴스 퀴즈를 시작해요</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -122,13 +123,13 @@ export default function SignupPage() {
                 영문, 숫자를 모두 포함하여 8자 이상으로 설정해 주세요.
               </p>
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" variant="cta" className="w-full" disabled={loading}>
               {loading ? "가입 중..." : "가입하기"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             이미 계정이 있으신가요?{" "}
-            <Link href="/login" className="text-primary underline">
+            <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
               로그인
             </Link>
           </p>

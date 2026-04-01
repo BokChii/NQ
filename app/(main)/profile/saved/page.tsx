@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Bookmark } from "lucide-react";
 import { SavedShortsList } from "./saved-shorts-list";
 
 export default async function ProfileSavedPage() {
@@ -22,18 +23,25 @@ export default async function ProfileSavedPage() {
   const questionIds = (savedRows ?? []).map((r) => r.question_id);
   if (questionIds.length === 0) {
     return (
-      <div className="p-4 space-y-4">
+      <div className="space-y-6">
         <div className="flex items-center gap-2">
           <Link href="/profile">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="h-10 w-10 rounded-xl p-0" aria-label="프로필로">
               ←
             </Button>
           </Link>
-          <h1 className="text-xl font-bold">저장한 뉴스 퀴즈</h1>
+          <h1 className="font-display text-xl font-bold">저장한 뉴스 퀴즈</h1>
         </div>
-        <p className="text-sm text-muted-foreground text-center py-12">
-          아직 저장한 퀴즈가 없어요. 쇼츠에서 ☆ 버튼을 눌러 저장해 보세요!
-        </p>
+        <Card variant="subtle" className="border-dashed">
+          <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+              <Bookmark className="h-6 w-6" strokeWidth={1.75} />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              아직 저장한 퀴즈가 없어요. 쇼츠에서 ☆ 버튼을 눌러 저장해 보세요!
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -65,18 +73,16 @@ export default async function ProfileSavedPage() {
     .map(({ _order, ...rest }) => rest);
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Link href="/profile">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" className="h-10 w-10 rounded-xl p-0" aria-label="프로필로">
             ←
           </Button>
         </Link>
-        <h1 className="text-xl font-bold">저장한 뉴스 퀴즈</h1>
+        <h1 className="font-display text-xl font-bold">저장한 뉴스 퀴즈</h1>
       </div>
-      <p className="text-sm text-muted-foreground">
-        쇼츠에서 저장한 퀴즈를 모아봤어요.
-      </p>
+      <p className="text-sm text-muted-foreground">쇼츠에서 저장한 퀴즈를 모아봤어요.</p>
       <SavedShortsList items={items} />
     </div>
   );

@@ -28,7 +28,6 @@ export default function LoginPage() {
       setError(err.message);
       return;
     }
-    // 이미 온보딩을 마친 유저는 /arena로, 미완료/최초 가입은 /onboarding으로
     if (user) {
       const { data: profile } = await supabase
         .from("profiles")
@@ -44,21 +43,18 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6">
-      <Card className="w-full max-w-[360px]">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-app p-6">
+      <Card variant="elevated" className="w-full max-w-[360px]">
         <CardHeader>
-          <CardTitle className="text-center">로그인</CardTitle>
+          <CardTitle className="text-center font-display text-xl">로그인</CardTitle>
+          <p className="text-center text-sm text-muted-foreground">NQ 계정으로 계속하세요</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {resetDone && (
-              <p className="text-sm text-success text-center">
-                비밀번호가 변경되었습니다. 새 비밀번호로 로그인하세요.
-              </p>
+              <p className="text-center text-sm text-success">비밀번호가 변경되었습니다. 새 비밀번호로 로그인하세요.</p>
             )}
-            {error && (
-              <p className="text-sm text-destructive text-center">{error}</p>
-            )}
+            {error && <p className="text-center text-sm text-destructive">{error}</p>}
             <div className="space-y-2">
               <Label htmlFor="email">이메일</Label>
               <Input
@@ -72,9 +68,9 @@ export default function LoginPage() {
               <p className="text-xs text-muted-foreground">가입 시 사용한 이메일 주소를 입력하세요.</p>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <Label htmlFor="password">비밀번호</Label>
-                <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-primary">
+                <Link href="/forgot-password" className="text-xs text-muted-foreground transition-colors hover:text-primary">
                   비밀번호를 잊으셨나요?
                 </Link>
               </div>
@@ -88,13 +84,13 @@ export default function LoginPage() {
               />
               <p className="text-xs text-muted-foreground">가입 시 설정한 비밀번호를 입력하세요.</p>
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" variant="cta" className="w-full" disabled={loading}>
               {loading ? "로그인 중..." : "로그인"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             계정이 없으신가요?{" "}
-            <Link href="/signup" className="text-primary underline">
+            <Link href="/signup" className="font-medium text-primary underline-offset-4 transition-colors hover:underline">
               회원가입
             </Link>
           </p>

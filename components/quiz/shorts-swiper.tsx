@@ -182,7 +182,7 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
 
   if (items.length === 0) {
     return (
-      <p className="text-muted-foreground text-sm text-center py-8">
+      <p className="rounded-2xl border border-dashed border-border bg-muted/30 py-10 text-center text-sm text-muted-foreground">
         아직 풀 수 있는 문항이 없어요. 다른 카테고리를 확인해 보세요.
       </p>
     );
@@ -190,7 +190,7 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
 
   if (showEndOfCategory) {
     return (
-      <p className="text-muted-foreground text-sm text-center py-8">
+      <p className="rounded-2xl border border-primary/20 bg-primary/5 py-10 text-center text-sm font-medium text-foreground">
         아직 이 카테고리의 새로운 퀴즈가 없어요. 다른 카테고리를 눌러 보세요.
       </p>
     );
@@ -208,7 +208,7 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.2 }}
         >
-          <Card className="overflow-hidden">
+          <Card variant="elevated" className="overflow-hidden border-primary/10">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
@@ -235,14 +235,14 @@ export function ShortsSwiper({ items, categoryLabel, onNeedMore, hasMore = true,
                   type="button"
                   onClick={() => handleSelect(i)}
                   disabled={selected !== null}
-                  className={`w-full rounded-lg border p-3 text-left text-sm transition-colors ${
+                  className={`w-full rounded-xl border p-3 text-left text-sm transition-all duration-200 ${
                     selected === null
-                      ? "border-border hover:bg-muted/50"
+                      ? "border-border hover:border-primary/30 hover:bg-muted/30"
                       : i === currentQ.correct_index
-                        ? "border-success bg-success/10"
+                        ? "border-success bg-success/15 ring-1 ring-success/30"
                         : selected === i
-                          ? "border-destructive bg-destructive/10"
-                          : "border-border opacity-70"
+                          ? "border-destructive bg-destructive/12 ring-1 ring-destructive/25"
+                          : "border-border/80 opacity-70"
                   }`}
                 >
                   {opt}

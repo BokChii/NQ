@@ -31,7 +31,7 @@ const TabsList = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+      "inline-flex min-h-[44px] items-center justify-center rounded-2xl bg-muted/80 p-1.5 text-muted-foreground ring-1 ring-border/50",
       className
     )}
     {...props}
@@ -57,8 +57,8 @@ const TabsTrigger = ({
       role="tab"
       aria-selected={isActive}
       className={cn(
-        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-        isActive ? "bg-background text-foreground shadow" : "hover:text-foreground",
+        "inline-flex min-h-[36px] items-center justify-center whitespace-nowrap rounded-lg px-2 py-1.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        isActive ? "bg-background text-foreground shadow-sm" : "hover:text-foreground",
         className
       )}
       onClick={() => ctx.onValueChange(value)}
